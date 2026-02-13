@@ -1,6 +1,7 @@
 # render_figure.R — main plotgardener orchestrator
 
 source("R/utils.R", local = TRUE)
+source("R/path_utils.R", local = TRUE)
 
 draw_elbow_arrow <- function(x_tss, y_base, dir, col = "black", lwd = 0.28,
                               elbow_h = 0.05, elbow_w = 0.12, arrow_mm = 0.75,
@@ -131,7 +132,7 @@ render_figure <- function(tracks, region, page, txdb) {
     tryCatch({
       if (tk$type == "hic") {
         hic <- plotgardener::plotHicTriangle(
-          data = tk$file, chrom = region$chrom,
+          data = safe_path(tk$file), chrom = region$chrom,
           chromstart = region$start, chromend = region$end,
           assembly = "hg38", norm = tk$norm %||% "KR",
           x = x0, y = y_cursor, width = w, height = h,
@@ -144,12 +145,12 @@ render_figure <- function(tracks, region, page, txdb) {
 
       } else if (tk$type == "signal") {
         sig_range <- if (!is.null(tk$range)) tk$range else {
-          plotgardener::calcSignalRange(data = tk$file, chrom = region$chrom,
+          plotgardener::calcSignalRange(data = safe_path(tk$file), chrom = region$chrom,
             chromstart = region$start, chromend = region$end, assembly = "hg38")
         }
         col <- tk$color %||% "#1f77b4"
         sig <- plotgardener::plotSignal(
-          data = tk$file, chrom = region$chrom,
+          data = safe_path(tk$file), chrom = region$chrom,
           chromstart = region$start, chromend = region$end,
           x = x0, y = y_cursor, width = w, height = h,
           just = c("left","top"), range = sig_range,
@@ -159,7 +160,7 @@ render_figure <- function(tracks, region, page, txdb) {
           axisLine = TRUE, fontsize = 4, main = TRUE)
 
       } else if (tk$type == "ranges") {
-        bed <- utils::read.table(tk$file, sep = "\t", header = FALSE, stringsAsFactors = FALSE)
+        bed <- utils::read.table(safe_path(tk$file), sep = "\t", header = FALSE, stringsAsFactors = FALSE)
         colnames(bed)[1:3] <- c("chrom","start","end")
         plotgardener::plotRanges(data = bed, chrom = region$chrom,
           chromstart = region$start, chromend = region$end,

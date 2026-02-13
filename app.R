@@ -16,6 +16,7 @@ suppressPackageStartupMessages({
 
 source("R/utils.R")
 source("R/render_figure.R")
+source("R/path_utils.R")
 
 # Available TxDb assemblies (extend later)
 ASSEMBLIES <- list(
@@ -259,7 +260,7 @@ server <- function(input, output, session) {
     if (length(signal_files) > 0) {
       tryCatch({
         shared_range <- plotgardener::calcSignalRange(
-          data = lapply(signal_files, function(x) x$file),
+          data = lapply(signal_files, function(x) safe_path(x$file)),
           chrom = region$chrom, chromstart = region$start, chromend = region$end,
           assembly = "hg38")
       }, error = function(e) {
