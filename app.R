@@ -17,6 +17,7 @@ suppressPackageStartupMessages({
 source("R/utils.R")
 source("R/render_figure.R")
 source("R/path_utils.R")
+suppress_fread_command()
 
 # Available TxDb assemblies (extend later)
 ASSEMBLIES <- list(
