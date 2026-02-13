@@ -1,0 +1,5 @@
+/* GeneTrack Studio custom styles */
+.track-panel:hover {
+  border-color: #80bdff;
+  box-shadow: 0 0 4px rgba(0,123,255,0.15);
+}
